@@ -1,14 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Login</title>
-    <link rel="stylesheet" href="{{ asset('bootstrap-3.1.1/css/bootstrap.min.css') }}">
-</head>
-<body>
+@extends('layout.app')
 
+@section('content')
 <div class="container">
    <div class="row" style="margin-top:45px">
       <div class="col-md-4 col-md-offset-4">
@@ -32,6 +24,4 @@
       </div>
    </div>
 </div>
-
-</body>
-</html>
+@endsection
