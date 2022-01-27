@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProductStoreRequest;
+use App\Http\Requests\ProductUpdateRequest;
+use App\Models\Product;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -13,7 +17,15 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        
+        $products = auth()->user()->products()
+        //EagerLoading :
+        ->with('inventories:product_id,sku')
+        ->select('id','product_name','style', 'brand')
+        ->paginate(15);
+       
+    
+        return view('home.dashboard', ['products' => $products]);
     }
 
     /**
@@ -21,9 +33,10 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        
+        return view('product.create');
     }
 
     /**
@@ -32,9 +45,12 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProductStoreRequest $request)
     {
-        //
+        auth()->user()->products()->create($request->validated());
+
+        //Add validation
+        return redirect(route('products.index'));
     }
 
     /**
@@ -54,9 +70,11 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Product $product)
     {
-        //
+        $this->authorize('update', $product);
+        
+        return view('product.edit', ['product' => $product]); 
     }
 
     /**
@@ -66,9 +84,11 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ProductUpdateRequest $request, Product $product)
     {
-        //
+        $product->update($request->validated());
+
+        return redirect(route('products.index'));
     }
 
     /**
@@ -77,8 +97,13 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Product $product)
     {
-        //
+        $this->authorize('delete', $product);
+       
+        $product->delete();
+
+       return redirect()->back();
+
     }
 }

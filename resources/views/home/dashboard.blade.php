@@ -1,34 +1,45 @@
 @extends('layout.app')
 
 @section('content')
-<table class="table table-striped table-dark">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">First</th>
-      <th scope="col">Last</th>
-      <th scope="col">Handle</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>Larry</td>
-      <td>the Bird</td>
-      <td>@twitter</td>
-    </tr>
-  </tbody>
-</table>    
+  <a href="/products/create">Create</a>
+    <table class="table table-striped table-dark">
+      <br>
+      <br>
+
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Style</th>
+            <th scope="col">Brand</th>
+            <th scope="col">SKU</th>
+          </tr>
+        </thead>
+
+      @foreach ($products as $product)
+        <tbody>
+          <tr>
+            <th scope="row">{{$product->product_name}}</th>
+            <td>{{$product->style}}</td>
+            <td>{{$product->brand}}</td>
+            <td>{{$product->inventories->implode('sku',',')}}
+              <div>
+              <a href="/products/{{$product->id}}/edit">Edit</a>
+            </div>
+              <div>
+                  <form action="{{route('products.destroy', $product->id)}}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                  <button>Delete</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      @endforeach
+    </table>   
+
+
+  <div>
+    {{$products->links()}}
+  </div>
 @endsection

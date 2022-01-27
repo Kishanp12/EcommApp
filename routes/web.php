@@ -19,10 +19,13 @@ Route::get('/', function () {
     return view('login');
 });
 
+
+
 Route::get('/auth/login', [LoginController::class, 'login'])->name('auth.login');
 
-Route::post('/auth/check', [LoginController::class, 'check'])->name('auth.check');
+    Route::post('/auth/check', [LoginController::class, 'check'])->name('auth.check');
 
-Route::get('/user/dashboard', [LoginController::class, 'dashboard'])->name('user.dashboard');
+    Route::get('/user/dashboard', [LoginController::class, 'dashboard'])->name('user.dashboard');
 
-Route::get('/user/products', [ProductController::class, 'index'])->name('user.products');
+    Route::resource('/products', ProductController::class);
+
