@@ -1,84 +1,27 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Product;
+use App\Models\User;
+use App\Models\Inventory;
 
 use Illuminate\Http\Request;
 
 class InventoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
+    public function index(Request $request) {
+
+        $inventories = auth()->user()->inventories();
+
+        if ($request->has('search')) {
+            $inventories->where('sku', $request->search)->orWhere('product_id', $request->search);
+        }
+
+        $inventories = $inventories->with('product:id,product_name')->paginate();
+
+        return view('inventory.show', ['inventories' => $inventories]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+    //Realationship error, not saving to varible Inventories trying to display relationship aka query not running
+    // Symfony\Component\HttpFoundation\Response::setContent(): Argument #1 ($content) must be of type ?string, Illuminate\Database\Eloquent\Relations\HasManyThrough given, called in /var/www/html/vendor/laravel/framework/src/Illuminate/Http/Response.php on line 72
 }

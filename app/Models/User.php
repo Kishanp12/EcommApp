@@ -55,4 +55,16 @@ class User extends Authenticatable
     public function products() {
         return $this->hasMany(Product::class, 'admin_id');
     }
+
+    public function inventories()
+    {
+        return $this->hasManyThrough(
+            Inventory::class,
+            Product::class,
+            'admin_id',
+            'product_id',
+            'id',
+            
+        );
+    }
 }
